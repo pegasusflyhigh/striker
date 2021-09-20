@@ -78,6 +78,10 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 10
 
+Metrics/BlockLength:
+  Exclude:
+  - 'db/schema.rb'
+
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/BlockComments:
@@ -164,3 +168,6 @@ Style/SymbolArray:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 190
+
+Style/Documentation:
+  Enabled: false
