@@ -31,3 +31,7 @@
 
 en:
   hello: "Hello world"
+  game:
+    errors:
+      not_found: "Game not found"
+      max_rounds_error: "Number of rounds cannot exceed %{Game::MAX_ROUNDS}"
