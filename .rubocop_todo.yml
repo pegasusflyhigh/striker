@@ -81,6 +81,7 @@ Metrics/PerceivedComplexity:
 Metrics/BlockLength:
   Exclude:
   - 'db/schema.rb'
+  - 'spec/**/*'
 
 # Offense count: 1
 # Cop supports --auto-correct.
