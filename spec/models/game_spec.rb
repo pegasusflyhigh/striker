@@ -9,11 +9,17 @@ RSpec.describe Game, type: :model do
     it { should have_many(:rounds) }
   end
 
-  describe 'number of rounds' do
-    it 'cannot be greater than the limit specified' do
-      create_list(:round, Game::MAX_ROUNDS, game_id: game.id, player_id: player.id)
-      new_round = create(:round, game_id: game.id, player_id: player.id)
-      expect { game.rounds << new_round }.to raise_error(I18n.t('game.errors.max_rounds_error'))
+  context 'validations' do
+    it do
+      should validate_inclusion_of(:status)
+        .in_array(Game::STATUSES)
+    end
+
+    describe 'number of rounds' do
+      it 'cannot be greater than the limit specified' do
+        new_round = create(:round, game_id: game.id, player_id: player.id, number: 11)
+        expect { game.rounds << new_round }.to raise_error(I18n.t('game.errors.max_rounds_error'))
+      end
     end
   end
 end

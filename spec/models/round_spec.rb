@@ -6,4 +6,8 @@ RSpec.describe Round, type: :model do
     it { should belong_to(:game).class_name('Game') }
     it { should have_one(:previous) }
   end
+
+  context 'validations' do
+    it { should validate_uniqueness_of(:number).scoped_to([:player_id, :game_id]) }
+  end
 end
