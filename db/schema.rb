@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_920_180_749) do
+ActiveRecord::Schema.define(version: 2021_09_20_180749) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,14 +31,14 @@ ActiveRecord::Schema.define(version: 20_210_920_180_749) do
 
   create_table "rounds", force: :cascade do |t|
     t.integer "number"
-    t.text "score", default: [], array: true
+    t.integer "scores", default: [], array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "player_id"
     t.bigint "game_id"
     t.integer "previous_id"
     t.index ["game_id"], name: "index_rounds_on_game_id"
-    t.index %w[number player_id game_id], name: "index_rounds_on_number_and_player_id_and_game_id", unique: true
+    t.index ["number", "player_id", "game_id"], name: "index_rounds_on_number_and_player_id_and_game_id", unique: true
     t.index ["player_id"], name: "index_rounds_on_player_id"
   end
 

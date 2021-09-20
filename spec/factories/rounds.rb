@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :round do
-    score { "MyText" }
+    scores { "MyText" }
     association :player
     association :game
   end
