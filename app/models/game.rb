@@ -1,11 +1,19 @@
 class Game < ApplicationRecord
   MAX_ROUNDS = 10
-  STATUSES = %w[started finished cancelled].freeze
+  STATUSES = %w[started finished].freeze
 
   has_many :players, dependent: :destroy
-  has_many :rounds, before_add: :validate_rounds_limit, dependent: :destroy
+  has_many :rounds, -> { order(created_at: :asc) }, before_add: :validate_rounds_limit, dependent: :destroy
 
   validates :status, inclusion: { in: STATUSES }
+  accepts_nested_attributes_for :players
+
+  def as_json(_options = {})
+    super(only: [:id, :status],
+          include: { players: { only: [:id, :name],
+                                methods: :total_score,
+                                include: { rounds: { only: [:id, :number, :scores] } } } })
+  end
 
   private
 
