@@ -35,3 +35,12 @@ en:
     errors:
       not_found: "Game not found"
       max_rounds_error: "Number of rounds cannot exceed %{Game::MAX_ROUNDS}"
+      finished_game: "Game has finished, please try a new game"
+  round:
+    errors:
+      max_score: "Invalid pins for this roll"
+      invalid_score: "Invalid pins for this round"
+      already_finished: "This round is already finished"
+  roll:
+    errors:
+      invalid: "Roll can be either 1, 2 or 3"
