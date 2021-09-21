@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Round, type: :model do
-  let(:round) { create(:round) }
+  let(:game) { create(:game) }
+  let(:player) { create(:player, game_id: game.id) }
+  let(:first_round) { player.rounds.first }
+  let(:round) { player.rounds.second }
 
   context 'associations' do
     it { should belong_to(:player).class_name('Player') }
@@ -11,6 +14,14 @@ RSpec.describe Round, type: :model do
 
   context 'validations' do
     it { should validate_uniqueness_of(:number).scoped_to([:player_id, :game_id]) }
+
+    it 'validates the size of scores is at most 3' do
+      round.scores = [1, 2, 3]
+      expect(round).to be_valid
+
+      round.scores = [1, 2, 3, 4]
+      expect(round).to be_invalid
+    end
 
     describe 'max_score_for_non_strike_or_spare' do
       context 'returns true' do
@@ -47,6 +58,23 @@ RSpec.describe Round, type: :model do
           expect(round.errors[:scores]).to include(I18n.t('round.errors.max_score'))
         end
       end
+    end
+
+    # context 'round_and_roll_sequence' do
+    #   context 'return false' do
+    #     it 'when previous round scores are empty' do
+    #       round.scores = [4, 5]
+
+    #       expect(round).to be_invalid
+    #       expect(round.errors[:scores]).to include(I18n.t('round.errors.invalid_score'))
+    #     end
+    #   end
+    # end
+  end
+
+  describe ".first_round?" do
+    it 'returns true if it is the first round of the game' do
+      expect(first_round.send(:first_round?)).to eq true
     end
   end
 end
