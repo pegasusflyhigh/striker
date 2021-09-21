@@ -61,8 +61,8 @@ class ScoreUpdater
   end
 
   def valid_pins
-    return true unless [round, roll, pins].all?(&:present?) && !round.try(:first_round?)
-    return true if round.previous.scores.present? && first_roll?
+    return true unless all_args_present?
+    return true if round.first_round? || round.previous.scores.present? && first_roll?
 
     errors.add(:base, I18n.t('round.errors.invalid_score')) if round.scores[roll - 1].blank?
     false
@@ -113,5 +113,9 @@ class ScoreUpdater
 
   def second_roll?
     roll == 2
+  end
+
+  def all_args_present?
+    [round, roll, pins].all?(&:present?)
   end
 end
