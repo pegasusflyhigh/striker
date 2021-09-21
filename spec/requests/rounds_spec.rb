@@ -11,7 +11,7 @@ RSpec.describe "Rounds", type: :request do
 
   describe 'PUT /update' do
     it 'should update with correct data' do
-      put "/rounds/#{first_round.id}", params: update_data(2, 1)
+      put "/rounds/#{first_round.id}", params: update_data(2, 1), as: :json
 
       response_body = JSON.parse(response.body)
 
