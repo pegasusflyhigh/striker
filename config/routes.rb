@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :games do
-    resources :players do
-      resources :rounds
+  resources :games, shallow: true do
+    resources :players, shallow: true do
+      resources :rounds, only: [:update]
     end
   end
 
