@@ -17,7 +17,7 @@ RSpec.describe Game, type: :model do
 
     describe 'number of rounds' do
       it 'cannot be greater than the limit specified' do
-        new_round = create(:round, game_id: game.id, player_id: player.id, number: 11)
+        new_round = create(:round, game_id: game.id, player_id: player.id, number: Game::MAX_ROUNDS + 1)
         expect { game.rounds << new_round }.to raise_error(I18n.t('game.errors.max_rounds_error'))
       end
     end

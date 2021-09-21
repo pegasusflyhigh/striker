@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Round, type: :model do
   let(:game) { create(:game) }
   let(:player) { create(:player, game_id: game.id) }
-  let(:first_round) { player.rounds.first }
   let(:round) { player.rounds.second }
+  let(:first_round) { player.rounds.first }
 
   context 'associations' do
     it { should belong_to(:player).class_name('Player') }
@@ -21,6 +21,36 @@ RSpec.describe Round, type: :model do
 
       round.scores = [1, 2, 3, 4]
       expect(round).to be_invalid
+    end
+
+    describe 'valid_scores?' do
+      context 'returns true' do
+        it 'when round scores are empty' do
+          empty_score_round = player.rounds.last
+          expect(empty_score_round.scores).to eq []
+          expect(empty_score_round.send(:valid_scores?)).to eq true
+        end
+
+        it 'when round is a strike' do
+          first_round.scores = [10]
+
+          expect(first_round.send(:valid_scores?)).to eq true
+        end
+
+        it 'when round is a spare' do
+          first_round.scores = [6, 4]
+
+          expect(first_round.send(:valid_scores?)).to eq true
+        end
+      end
+
+      context 'returns false' do
+        it 'when scores contain non integer value' do
+          first_round.scores << "hey"
+
+          expect(first_round.send(:valid_scores?)).to eq false
+        end
+      end
     end
 
     describe 'max_score_for_non_strike_or_spare' do
@@ -59,22 +89,33 @@ RSpec.describe Round, type: :model do
         end
       end
     end
-
-    # context 'round_and_roll_sequence' do
-    #   context 'return false' do
-    #     it 'when previous round scores are empty' do
-    #       round.scores = [4, 5]
-
-    #       expect(round).to be_invalid
-    #       expect(round.errors[:scores]).to include(I18n.t('round.errors.invalid_score'))
-    #     end
-    #   end
-    # end
   end
 
   describe ".first_round?" do
     it 'returns true if it is the first round of the game' do
-      expect(first_round.send(:first_round?)).to eq true
+      expect(first_round.first_round?).to eq true
+    end
+  end
+
+  describe ".last_round?" do
+    it 'returns true if it is the last round of the game' do
+      last_round = player.rounds.last
+
+      expect(last_round.last_round?).to eq true
+    end
+  end
+
+  describe ".strike?" do
+    it 'returns true if given round is a strike' do
+      first_round.scores = [10]
+      expect(first_round.strike?).to eq true
+    end
+  end
+
+  describe ".spare?" do
+    it 'returns true if given round is a spare' do
+      first_round.scores = [4, Round::PINS - 4]
+      expect(first_round.spare?).to eq true
     end
   end
 end
